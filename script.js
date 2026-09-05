@@ -21,6 +21,7 @@ butterfly.src = "assets/butterfly.png";
 let loadedImages = 0;
 let raindrops = [];
 let plantGrowth = 0;
+let butterflies = [];
 
 function imageLoaded() {
     loadedImages++;
@@ -123,6 +124,35 @@ function drawSprout() {
     }
 }
 
+function addButterflies(x, y) {
+    for (let i = 0; i < 3; i++) {
+        butterflies.push({
+            x: x,
+            y: y,
+            speedX: -2 + Math.random() * 4,
+            speedY: -2 + Math.random() * 4,
+            size: 20 + Math.random() * 20,
+            life: 180
+
+        });
+    }
+}
+
+function drawButterflies() {
+    for (let i = 0; i < butterflies.length; i++) {
+        const b = butterflies[i];
+        ctx.drawImage(butterfly, b.x, b.y, b.size, b.size);
+
+        b.x += b.speedX;
+        b.y += b.speedY;
+        b.life--;
+
+        if (b.life <= 0) {
+            butterflies.splice(i, 1);
+            i--;
+        }
+    }
+}
 
 
 function animate() {
@@ -131,6 +161,7 @@ function animate() {
     drawScene();
     drawRain();
     drawSprout();
+    drawButterflies();
 
 
     if (plantGrowth < 120) {
@@ -139,3 +170,11 @@ function animate() {
 
     requestAnimationFrame(animate);
 }
+canvas.addEventListener("click", function(event) {
+    const rect = canvas.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    addButterflies(x, y);
+});
