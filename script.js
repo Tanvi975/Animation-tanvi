@@ -19,11 +19,14 @@ flowers.src = "assets/flowers.png";
 butterfly.src = "assets/butterfly.png";
 
 let loadedImages = 0;
+let raindrops = [];
 
 function imageLoaded() {
     loadedImages++;
+
     if (loadedImages === 7) {
-        drawScene();
+        createRain();
+        animate();
     }
 }
 
@@ -34,6 +37,17 @@ cloud2.onload = imageLoaded;
 tree.onload = imageLoaded;
 flowers.onload = imageLoaded;
 butterfly.onload = imageLoaded;
+
+
+function createRain() {
+    for (let i = 0; i < 100; i++) {
+        raindrops.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * 300,
+            speed: 3 + Math.random() * 3
+        });
+    }
+}
 
 function drawScene() {
     ctx.drawImage(background, 0, 0, 1000, 600);
@@ -55,3 +69,40 @@ function drawScene() {
     ctx.strokeStyle = "#3E2418";
     ctx.stroke();
 };
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawScene();
+    drawRain();
+    requestAnimationFrame(animate);
+}
+
+
+function drawRain() {
+    ctx.strokeStyle = "#b8dff2";
+
+    for (let i = 0; i < raindrops.length; i++) {
+        const drop = raindrops[i];
+
+        ctx.beginPath();
+        ctx.moveTo(drop.x, drop.y);
+        ctx.lineTo(drop.x, drop.y + 10);
+        ctx.stroke();
+
+        drop.y += drop.speed;
+
+        if (drop.y > canvas.height) {
+            drop.y = 0;
+        }
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawScene();
+    drawRain();
+
+    requestAnimationFrame(animate);
+}
