@@ -20,6 +20,7 @@ butterfly.src = "assets/butterfly.png";
 
 let loadedImages = 0;
 let raindrops = [];
+let plantGrowth = 0;
 
 function imageLoaded() {
     loadedImages++;
@@ -58,25 +59,19 @@ function drawScene() {
     ctx.drawImage(flowers, 460, 350, 250, 125);
     ctx.drawImage(butterfly, 480, 380, 30, 40);
 
-    ctx.fillStyle = "#725339";
+    if (plantGrowth === 0) {
+        ctx.fillStyle = "#725339";
 
 
-    ctx.beginPath();
-    ctx.ellipse(200, 510, 8, 14, 0, 0, Math.PI * 2);
-    ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(200, 510, 8, 14, 0, 0, Math.PI * 2);
+        ctx.fill();
 
 
-    ctx.strokeStyle = "#3E2418";
-    ctx.stroke();
+        ctx.strokeStyle = "#3E2418";
+        ctx.stroke();
+    }
 };
-
-function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    drawScene();
-    drawRain();
-    requestAnimationFrame(animate);
-}
 
 
 function drawRain() {
@@ -98,11 +93,49 @@ function drawRain() {
     }
 }
 
+function drawSprout() {
+    if (plantGrowth > 0) {
+        ctx.strokeStyle = "#3b7a3b";
+        ctx.lineWidth = 4;
+
+        ctx.beginPath();
+        ctx.moveTo(200, 510);
+        ctx.lineTo(200, 510 - plantGrowth);
+        ctx.stroke();
+
+        ctx.fillStyle = "#4f9d4f";
+
+        ctx.beginPath();
+        ctx.ellipse(190, 510 - plantGrowth + 10, 12, 6, -0.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.ellipse(210, 510 - plantGrowth + 10, 12, 6, 0.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.ellipse(188, 510 - plantGrowth / 2, 14, 7, -0.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.ellipse(212, 510 - plantGrowth / 2, 14, 7, 0.5, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+
+
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawScene();
     drawRain();
+    drawSprout();
+
+
+    if (plantGrowth < 120) {
+        plantGrowth += 0.5;
+    }
 
     requestAnimationFrame(animate);
 }
