@@ -10,3 +10,17 @@ body {
 canvas {
     display: block;
 }
+
+.buttons {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+}
+
+button {
+    padding: 8px 16px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}

@@ -22,6 +22,7 @@ let loadedImages = 0;
 let raindrops = [];
 let plantGrowth = 0;
 let butterflies = [];
+let rainOn = true;
 
 function imageLoaded() {
     loadedImages++;
@@ -159,7 +160,9 @@ function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     drawScene();
-    drawRain();
+    if (rainOn) {
+        drawRain();
+    }
     drawSprout();
     drawButterflies();
 
@@ -177,4 +180,22 @@ canvas.addEventListener("click", function(event) {
     const y = event.clientY - rect.top;
 
     addButterflies(x, y);
+});
+
+document.getElementById("rain").addEventListener("click", function() {
+    rainOn = !rainOn;
+
+    if (rainOn) {
+        this.textContent = "Rain ON";
+    } else {
+        this.textContent = "Rain OFF";
+    }
+});
+
+document.getElementById("restart").addEventListener("click", function() {
+    plantGrowth = 0;
+    butterflies = [];
+    rainOn = true;
+
+    document.getElementById("rain").textContent = "Rain ON";
 });
