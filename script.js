@@ -9,6 +9,9 @@ const cloud3 = new Image();
 const tree = new Image();
 const flowers = new Image();
 const butterfly = new Image();
+const flower1 = new Image();
+const flower2 = new Image();
+const flower3 = new Image();
 
 background.src = "assets/background.png";
 sun.src = "assets/sun.png";
@@ -19,6 +22,9 @@ cloud3.src = "assets/cloud.png";
 tree.src = "assets/tree.png";
 flowers.src = "assets/flowers.png";
 butterfly.src = "assets/butterfly.png";
+flower1.src = "assets/flower1.png";
+flower2.src = "assets/flower2.png";
+flower3.src = "assets/flower3.png";
 
 let loadedImages = 0;
 let raindrops = [];
@@ -35,7 +41,7 @@ let cloudOpacity = 1;
 function imageLoaded() {
     loadedImages++;
 
-    if (loadedImages === 8) {
+    if (loadedImages === 11) {
         createRain();
         animate();
     }
@@ -49,6 +55,9 @@ cloud3.onload = imageLoaded;
 tree.onload = imageLoaded;
 flowers.onload = imageLoaded;
 butterfly.onload = imageLoaded;
+flower1.onload = imageLoaded;
+flower2.onload = imageLoaded;
+flower3.onload = imageLoaded;
 
 
 function createRain() {
@@ -89,6 +98,13 @@ function drawScene() {
     }
     ctx.drawImage(tree, 600, 255, 200, 233);
     ctx.drawImage(flowers, 460, 350, 250, 125);
+    ctx.drawImage(flower1, 350, 390, 100, 50);
+    ctx.drawImage(flower2, 300, 390, 45, 60);
+    ctx.drawImage(flower3, 330, 380, 45, 60);
+    ctx.drawImage(flower2, 410, 390, 40, 55);
+    ctx.drawImage(flower3, 430, 390, 40, 55);
+    ctx.drawImage(flower2, 820, 390, 40, 55);
+    ctx.drawImage(flower1, 750, 390, 100, 50);
     ctx.drawImage(butterfly, 480, 380, 30, 40);
 
     if (plantGrowth === 0) {
@@ -223,9 +239,11 @@ function animate() {
 }
 canvas.addEventListener("click", function(event) {
     const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
 
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const x = (event.clientX - rect.left) * scaleX;
+    const y = (event.clientY - rect.top) * scaleY;
 
     addButterflies(x, y);
 });
@@ -238,6 +256,10 @@ document.getElementById("restart").addEventListener("click", function() {
     rainTimer = 0;
     sunOpacity = 0;
     cloudOpacity = 1;
+
+    cloud1X = 300;
+    cloud2X = 600;
+    cloud3X = 450;
 
     document.getElementById("rain").textContent = "Rain ON";
 });
