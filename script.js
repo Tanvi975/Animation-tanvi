@@ -5,6 +5,7 @@ const background = new Image();
 const sun = new Image();
 const cloud1 = new Image();
 const cloud2 = new Image();
+const cloud3 = new Image();
 const tree = new Image();
 const flowers = new Image();
 const butterfly = new Image();
@@ -14,6 +15,7 @@ sun.src = "assets/sun.png";
 
 cloud1.src = "assets/cloud.png";
 cloud2.src = "assets/cloud.png";
+cloud3.src = "assets/cloud.png";
 tree.src = "assets/tree.png";
 flowers.src = "assets/flowers.png";
 butterfly.src = "assets/butterfly.png";
@@ -23,11 +25,17 @@ let raindrops = [];
 let plantGrowth = 0;
 let butterflies = [];
 let rainOn = true;
+let rainTimer = 0;
+let sunOpacity = 0;
+let cloud1X = 300;
+let cloud2X = 600;
+let cloud3X = 450;
+let cloudOpacity = 1;
 
 function imageLoaded() {
     loadedImages++;
 
-    if (loadedImages === 7) {
+    if (loadedImages === 8) {
         createRain();
         animate();
     }
@@ -37,6 +45,7 @@ background.onload = imageLoaded;
 sun.onload = imageLoaded;
 cloud1.onload = imageLoaded;
 cloud2.onload = imageLoaded;
+cloud3.onload = imageLoaded;
 tree.onload = imageLoaded;
 flowers.onload = imageLoaded;
 butterfly.onload = imageLoaded;
@@ -53,10 +62,31 @@ function createRain() {
 }
 
 function drawScene() {
+
     ctx.drawImage(background, 0, 0, 1000, 600);
-    ctx.drawImage(sun, 50, 50, 130, 120);
-    ctx.drawImage(cloud1, 300, 70, 160, 96);
-    ctx.drawImage(cloud2, 600, 100, 180, 108);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "16px Arial";
+    ctx.fillText("Tap anywhere to see butterflies!", 20, 30);
+
+    if (!rainOn) {
+        if (cloudOpacity > 0) {
+            cloudOpacity -= 0.005;
+        }
+        if (sunOpacity < 1) {
+            sunOpacity += 0.01;
+        }
+
+        ctx.globalAlpha = sunOpacity;
+        ctx.drawImage(sun, 50, 50, 130, 120);
+        ctx.globalAlpha = 1;
+    }
+    if (cloudOpacity > 0) {
+        ctx.globalAlpha = cloudOpacity;
+        ctx.drawImage(cloud1, cloud1X, 70, 160, 96);
+        ctx.drawImage(cloud2, cloud2X, 100, 180, 108);
+        ctx.drawImage(cloud3, cloud3X, 30, 120, 72);
+        ctx.globalAlpha = 1;
+    }
     ctx.drawImage(tree, 600, 255, 200, 233);
     ctx.drawImage(flowers, 460, 350, 250, 125);
     ctx.drawImage(butterfly, 480, 380, 30, 40);
@@ -126,6 +156,9 @@ function drawSprout() {
 }
 
 function addButterflies(x, y) {
+    if (y > 40) {
+        y = 400;
+    }
     for (let i = 0; i < 3; i++) {
         butterflies.push({
             x: x,
@@ -148,6 +181,13 @@ function drawButterflies() {
         b.y += b.speedY;
         b.life--;
 
+        if (b.y > 400) {
+            b.y = 400;
+        }
+        if (b.y >= 400 && b.speedY > 0) {
+            b.speedY = -b.speedY;
+        }
+
         if (b.life <= 0) {
             butterflies.splice(i, 1);
             i--;
@@ -162,6 +202,14 @@ function animate() {
     drawScene();
     if (rainOn) {
         drawRain();
+        cloud1X += 0.4;
+        cloud2X += 0.3;
+        cloud3X += 0.5;
+        rainTimer++;
+
+        if (rainTimer > 300) {
+            rainOn = false;
+        }
     }
     drawSprout();
     drawButterflies();
@@ -182,20 +230,14 @@ canvas.addEventListener("click", function(event) {
     addButterflies(x, y);
 });
 
-document.getElementById("rain").addEventListener("click", function() {
-    rainOn = !rainOn;
-
-    if (rainOn) {
-        this.textContent = "Rain ON";
-    } else {
-        this.textContent = "Rain OFF";
-    }
-});
 
 document.getElementById("restart").addEventListener("click", function() {
     plantGrowth = 0;
     butterflies = [];
     rainOn = true;
+    rainTimer = 0;
+    sunOpacity = 0;
+    cloudOpacity = 1;
 
     document.getElementById("rain").textContent = "Rain ON";
 });
