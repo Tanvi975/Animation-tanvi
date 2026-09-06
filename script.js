@@ -37,6 +37,7 @@ let cloud1X = 300;
 let cloud2X = 600;
 let cloud3X = 450;
 let cloudOpacity = 1;
+let sideGrowth = 0;
 
 function imageLoaded() {
     loadedImages++;
@@ -169,6 +170,31 @@ function drawSprout() {
         ctx.ellipse(212, 510 - plantGrowth / 2, 14, 7, 0.5, 0, Math.PI * 2);
         ctx.fill();
     }
+    if (plantGrowth > 60) {
+        sideGrowth += 0.3;
+
+        if (sideGrowth > 60) {
+            sideGrowth = 60;
+        }
+        ctx.strokeStyle = "#3b7a3b";
+        ctx.lineWidth = 3;
+
+        ctx.beginPath();
+        ctx.moveTo(195, 510);
+        ctx.lineTo(185, 510 - sideGrowth);
+        ctx.stroke();
+
+        if (sideGrowth > 20) {
+            ctx.fillStyle = "#4f9d4f";
+            ctx.beginPath();
+            ctx.ellipse(180, 480 - sideGrowth * 0.3, 10, 5, -0.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.ellipse(195, 495 - sideGrowth * 0.2, 10, 5, 0.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
 }
 
 function addButterflies(x, y) {
@@ -260,6 +286,8 @@ document.getElementById("restart").addEventListener("click", function() {
     cloud1X = 300;
     cloud2X = 600;
     cloud3X = 450;
+
+    sideGrowth = 0;
 
     document.getElementById("rain").textContent = "Rain ON";
 });
